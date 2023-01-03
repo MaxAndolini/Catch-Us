@@ -10,12 +10,12 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     public Tilemap tilemap; // A reference to the Tilemap object
 
     private Animator animator;
-    private SpriteRenderer spriteRenderer;
+    public SpriteRenderer playerSpriteRenderer;
+    public SpriteRenderer playerOutlineSpriteRenderer;
     private Camera mainCamera; // A reference to the main camera
 
     private void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         mainCamera = Camera.main;
 
@@ -52,7 +52,8 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
             // Eğer y eksenine göre hareket ediliyorsa, sprite'ı y eksenine göre aynala
             if (horizontal > 0 || horizontal < 0)
             {
-                spriteRenderer.flipX = horizontal < 0;
+                playerSpriteRenderer.flipX = horizontal < 0;
+                playerOutlineSpriteRenderer.flipX = horizontal < 0;
                 photonView.RPC("FlipSprite", RpcTarget.Others, horizontal < 0);
             }
 
@@ -85,7 +86,8 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     [PunRPC]
     private void FlipSprite(bool flipX)
     {
-        spriteRenderer.flipX = flipX;
+        playerSpriteRenderer.flipX = flipX;
+        playerOutlineSpriteRenderer.flipX = flipX;
     }
 
     [PunRPC]
