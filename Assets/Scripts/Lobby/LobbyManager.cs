@@ -5,6 +5,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
+
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
     public InputField roomInput;

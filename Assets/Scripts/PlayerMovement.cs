@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     public float speed = 3f;
     public float smoothTime = 0.3f; // The smoothing factor for the camera's movement
     public Vector2 minPos, maxPos; // The minimum and maximum positions that the camera can have
-    public Tilemap tilemap; // A reference to the Tilemap object
+    private Tilemap tilemap; // A reference to the Tilemap object
 
     private Animator animator;
     public SpriteRenderer playerSpriteRenderer;
