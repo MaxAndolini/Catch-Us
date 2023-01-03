@@ -509,7 +509,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89d331b2410a74557ab24ba4bf287c8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  light2D: {fileID: 8881277362720900028}
+  closeLight: {fileID: 6356524966428046241}
+  closeVision: {fileID: 6356524965684411396}
+  flashVision: {fileID: 8881277362720900028}
+  spriteRendererBody: {fileID: 7459931987401213381}
+  spriteRendererPart: {fileID: 9060702430184719537}
+  notOwnedMaterial: {fileID: 2100000, guid: 908d79952cc41704c835cb1ecc1527fc, type: 2}
 --- !u!1 &9060702430184719543
 GameObject:
   m_ObjectHideFlags: 0

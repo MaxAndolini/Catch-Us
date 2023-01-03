@@ -1,10 +1,29 @@
+using System;
 using Photon.Pun;
 using UnityEngine;
 
 public class FlashLight : MonoBehaviourPunCallbacks
 {
-    // The flashlight light component
-    public GameObject light2D;
+    public GameObject closeLight;
+    public GameObject closeVision;
+    public GameObject flashVision;
+    
+    public SpriteRenderer spriteRendererBody; // Sprite renderer component of the player body
+    public SpriteRenderer spriteRendererPart; // Sprite renderer component of the player part
+    public Material notOwnedMaterial; // Material to use when the client is not the owner of the player
+
+    private void Start()
+    {
+        if (!photonView.IsMine)
+        {
+            closeLight.SetActive(false);
+            closeVision.SetActive(false);
+            flashVision.SetActive(false);
+
+            spriteRendererBody.material = notOwnedMaterial;
+            spriteRendererPart.material = notOwnedMaterial;
+        }
+    }
 
     private void Update()
     {
@@ -20,7 +39,7 @@ public class FlashLight : MonoBehaviourPunCallbacks
             var rotation = Quaternion.LookRotation(direction, Vector3.forward);
 
             // Set the light's rotation
-            light2D.transform.rotation = rotation;
+            flashVision.transform.rotation = rotation;
         }
     }
 }
