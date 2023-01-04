@@ -5,6 +5,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
@@ -25,6 +26,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public Transform playerItemParent;
 
     public GameObject playButton;
+
+    public GameObject colorMenu;
+    public Color[] colors;
+    
     private void Start()
     {
         PhotonNetwork.JoinLobby(); //in order to create a room, join photon lobby
@@ -127,6 +132,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             //keyvalue represents 2 list. int is a ID and Player is a photon player component
             PlayerItem newPlayerItem = Instantiate(playerItem, playerItemParent);
             newPlayerItem.SetPlayerName(player.Value); //it comes from PlayerItem class
+            int index = Random.Range(0, colors.Length);
+            Color color = colors[index];
+            newPlayerItem.SetPlayerColor(color);
             playerItemsList.Add(newPlayerItem);
         }
     }
@@ -146,4 +154,44 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel("GameScene");
     }
     
+    public void OnClickColorChangeButton()
+    {
+        colorMenu.SetActive(true);
+    }
+    
+    public void OnClickColorChangeExitButton()
+    {
+        colorMenu.SetActive(false);
+    }
+    
+    public void ChangeColor(int index)
+    {
+        Color color = colors[index];
+        Debug.Log(color.ToString());
+        
+        // Call the UpdateCharacterColor function on all clients if the selected color has changed
+        photonView.RPC("UpdateCharacterColor", RpcTarget.All, color);
+    }
+    
+    // Updates the color of the character for all clients
+    [PunRPC]
+    void UpdateCharacterColor(Color color)
+    {
+        // Only update the color if the character is owned by the local player
+        if (photonView.IsMine)
+        {
+            // Set the color of the character
+            foreach (var player in playerItemsList)
+            {
+                if (player.playerName.text == PlayerPrefs.GetString("Username"))
+                {
+                    player.SetPlayerColor(color);
+                    
+                    // Save the selected color locally
+                    PlayerPrefs.SetString("Color", color.ToString());
+                    break;
+                }
+            }
+        }
+    }
 }

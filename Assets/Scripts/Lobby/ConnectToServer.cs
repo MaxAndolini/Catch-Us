@@ -23,6 +23,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster() //succesfully connected main server
     {
+        PlayerPrefs.SetString("Username", nameInput.text);
         SceneManager.LoadScene("LobbyScene");
     }
 }

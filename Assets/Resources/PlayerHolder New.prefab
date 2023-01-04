@@ -349,6 +349,7 @@ GameObject:
   - component: {fileID: 9060702429923465202}
   - component: {fileID: 9060702429923465201}
   - component: {fileID: 9060702429923465208}
+  - component: {fileID: 7116464741639449175}
   m_Layer: 0
   m_Name: PlayerHolder New
   m_TagString: Player
@@ -515,6 +516,21 @@ MonoBehaviour:
   spriteRendererBody: {fileID: 7459931987401213381}
   spriteRendererPart: {fileID: 9060702430184719537}
   notOwnedMaterial: {fileID: 2100000, guid: 908d79952cc41704c835cb1ecc1527fc, type: 2}
+--- !u!114 &7116464741639449175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9060702429923465200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7c6af0f25a70a7409852ba74af4743a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 7459931987401213381}
+  colors: []
+  selectedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &9060702430184719543
 GameObject:
   m_ObjectHideFlags: 0
