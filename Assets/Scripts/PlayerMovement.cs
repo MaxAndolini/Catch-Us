@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     public Vector2 minPos, maxPos; // The minimum and maximum positions that the camera can have
     public SpriteRenderer playerSpriteRenderer;
     public SpriteRenderer playerOutlineSpriteRenderer;
+    public string playerName;
     public bool isImposter;
 
     private Animator animator;
@@ -17,6 +18,8 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        playerName = PlayerPrefs.GetString("Username");
+        Debug.Log(playerName);
         animator = GetComponent<Animator>();
         mainCamera = Camera.main;
 
@@ -94,19 +97,21 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     [PunRPC]
     private void SetAnimation(string animationName)
     {
-        animator.Play(animationName);
+        if(animator != null) animator.Play(animationName);
     }
 
     [PunRPC]
     private void RPC_NeutralizeImposter(int viewID)
     {
         PhotonViewByID(viewID).GetComponent<PlayerMovement>().isImposter = false;
+        Debug.Log("Masum");
     }
 
     [PunRPC]
     private void RPC_MakeImposter(int viewID)
     {
         PhotonViewByID(viewID).GetComponent<PlayerMovement>().isImposter = true;
+        Debug.Log("Katil");
     }
 
     public PhotonView PhotonViewByID(int viewID)

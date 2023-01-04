@@ -5,6 +5,7 @@ using UnityEngine;
 public class ColorChanger : MonoBehaviour
 {
     public SpriteRenderer player;
+    public Color selectedColor;
 
     private void Start()
     {
@@ -16,5 +17,6 @@ public class ColorChanger : MonoBehaviour
         Debug.Log(color);
         
         player.color = color;
+        selectedColor = color;
     }
 }
