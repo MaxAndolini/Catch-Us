@@ -350,6 +350,7 @@ GameObject:
   - component: {fileID: 9060702429923465201}
   - component: {fileID: 9060702429923465208}
   - component: {fileID: 7116464741639449175}
+  - component: {fileID: 5294031106083561962}
   m_Layer: 0
   m_Name: PlayerHolder New
   m_TagString: Player
@@ -421,6 +422,9 @@ MonoBehaviour:
   playerOutlineSpriteRenderer: {fileID: 9060702430184719537}
   playerName: 
   isImposter: 0
+  isDead: 0
+  deadBodyPrefab: {fileID: 3759290295386701601, guid: 80c315395383a43d9af25dc2bdfcd31a, type: 3}
+  freeze: 0
 --- !u!114 &9060702429923465212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -532,6 +536,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 7459931987401213381}
   selectedColor: {r: 0, g: 0, b: 0, a: 0}
+--- !u!58 &5294031106083561962
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9060702429923465200}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1.3
 --- !u!1 &9060702430184719543
 GameObject:
   m_ObjectHideFlags: 0

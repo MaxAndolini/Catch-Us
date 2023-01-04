@@ -47,6 +47,9 @@ MonoBehaviour:
   - UpdateCharacterRandomColor
   - RPC_MakeImposter
   - RPC_NeutralizeImposter
+  - RPC_Kill
+  - DeleteWaiting
+  - Freeze
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

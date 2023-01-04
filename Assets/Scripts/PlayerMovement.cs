@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -11,10 +12,14 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     public SpriteRenderer playerOutlineSpriteRenderer;
     public string playerName;
     public bool isImposter;
+    public bool isDead;
 
     private Animator animator;
     private Camera mainCamera; // A reference to the main camera
     private Tilemap tilemap; // A reference to the Tilemap object
+    private List<PlayerMovement> targets = new List<PlayerMovement>();
+    public GameObject deadBodyPrefab;
+    public bool freeze;
 
     private void Start()
     {
@@ -45,6 +50,8 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     private void Update()
     {
         if (!photonView.IsMine) return;
+        if (freeze) return;
+        
         var horizontal = Input.GetAxis("Horizontal");
         var vertical = Input.GetAxis("Vertical");
 
@@ -79,6 +86,24 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
             Mathf.Clamp(mainCamera.transform.position.x, minPos.x, maxPos.x),
             Mathf.Clamp(mainCamera.transform.position.y, minPos.y, maxPos.y),
             mainCamera.transform.position.z);
+        
+        if (!isImposter)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (targets.Count == 0)
+                return;
+            else
+            {
+                if (targets[targets.Count - 1].isDead)
+                    return;
+                transform.position = targets[targets.Count - 1].transform.position;
+                //targets[targets.Count - 1].Die();
+                targets[targets.Count - 1].photonView.RPC("RPC_Kill", RpcTarget.All);
+                targets.RemoveAt(targets.Count - 1);
+            }
+        }
     }
 
     [PunRPC]
@@ -121,5 +146,61 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
             if (pview.ViewID == viewID)
                 return pview;
         return null;
+    }
+    
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.CompareTag("Player"))
+        {
+            PlayerMovement tempTarget = col.GetComponent<PlayerMovement>();
+            if (isImposter)
+            {
+                if (tempTarget.isImposter)
+                    return;
+                else
+                {
+                    targets.Add(tempTarget);
+                    
+                }
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D col)
+    {
+        if (col.CompareTag("Player"))
+        {
+            PlayerMovement tempTarget = col.GetComponent<PlayerMovement>();
+            if (targets.Contains(tempTarget))
+            {
+                targets.Remove(tempTarget);
+            }
+        }
+    }
+    
+    [PunRPC]
+    void RPC_Kill()
+    {
+        Die();
+    }
+    
+    public void Die()
+    {
+        if (!photonView.IsMine)
+            return;
+        
+        //AU_Body tempBody = Instantiate(bodyPrefab, transform.position, transform.rotation).GetComponent<AU_Body>();
+        Dead tempBody = PhotonNetwork.Instantiate(deadBodyPrefab.name, transform.position, transform.rotation).GetComponent<Dead>();
+        tempBody.SetColor(gameObject.GetComponent<ColorChanger>().selectedColor);
+        PhotonNetwork.Destroy(transform.gameObject);
+        isDead = true;
+    }
+
+    [PunRPC]
+    public void Freeze(bool condition)
+    {
+        freeze = condition;
+        Debug.Log("SAAA");
+        Debug.Log(condition);
     }
 }
