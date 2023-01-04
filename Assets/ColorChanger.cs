@@ -1,38 +1,20 @@
+using System;
 using Photon.Pun;
 using UnityEngine;
 
-public class ColorChanger : MonoBehaviourPunCallbacks
+public class ColorChanger : MonoBehaviour
 {
     public SpriteRenderer player;
-    public Color[] colors;
-    public Color selectedColor; // The selected color for the character
-    
-    
 
-    // Updates the color of the character for all clients
-    [PunRPC]
-    void UpdateCharacterColor(Color color)
+    private void Start()
     {
-        // Only update the color if the character is owned by the local player
-        if (photonView.IsMine)
-        {
-            // Set the color of the character
-            player.material.color = color;
-            
-            // Save the selected color locally
-            PlayerPrefs.SetString("Color", color.ToString());
-        }
-    }
-
-    public void ChangeColor(int index)
-    {
-        Color color = colors[index];
+        var colorString = PlayerPrefs.GetString("Color");
+        Debug.Log(colorString);
+        string[] rgba = colorString.Substring(5, colorString.Length - 6).Trim().Split(',');
+        Debug.Log(rgba);
+        Color color = new Color(float.Parse(rgba[0]), float.Parse(rgba[1]), float.Parse(rgba[2]), float.Parse(rgba[3]));
+        Debug.Log(color);
         
-        // Call the UpdateCharacterColor function on all clients if the selected color has changed
-        if (color != selectedColor)
-        {
-            photonView.RPC("UpdateCharacterColor", RpcTarget.All, color);
-            selectedColor = color;
-        }
+        player.color = color;
     }
 }

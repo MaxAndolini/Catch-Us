@@ -419,6 +419,7 @@ MonoBehaviour:
   maxPos: {x: 0, y: 0}
   playerSpriteRenderer: {fileID: 7459931987401213381}
   playerOutlineSpriteRenderer: {fileID: 9060702430184719537}
+  isImposter: 0
 --- !u!114 &9060702429923465212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -529,8 +530,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 7459931987401213381}
-  colors: []
-  selectedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &9060702430184719543
 GameObject:
   m_ObjectHideFlags: 0

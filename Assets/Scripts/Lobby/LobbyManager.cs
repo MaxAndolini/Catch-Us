@@ -28,8 +28,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public GameObject playButton;
 
     public GameObject colorMenu;
-    public Color[] colors;
-    
+    public  List<Color> colors;
+    private Color? _localColor = null;
+    private Color? _selectedColor = null;
+
     private void Start()
     {
         PhotonNetwork.JoinLobby(); //in order to create a room, join photon lobby
@@ -132,11 +134,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             //keyvalue represents 2 list. int is a ID and Player is a photon player component
             PlayerItem newPlayerItem = Instantiate(playerItem, playerItemParent);
             newPlayerItem.SetPlayerName(player.Value); //it comes from PlayerItem class
-            int index = Random.Range(0, colors.Length);
-            Color color = colors[index];
-            newPlayerItem.SetPlayerColor(color);
             playerItemsList.Add(newPlayerItem);
         }
+        
+        photonView.RPC("UpdateCharacterColor", RpcTarget.All);
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -167,29 +168,48 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public void ChangeColor(int index)
     {
         Color color = colors[index];
-        Debug.Log(color.ToString());
-        
+        _selectedColor = null;
+        _localColor = color;
+
         // Call the UpdateCharacterColor function on all clients if the selected color has changed
-        photonView.RPC("UpdateCharacterColor", RpcTarget.All, color);
+        photonView.RPC("UpdateCharacterColor", RpcTarget.All);
     }
     
     // Updates the color of the character for all clients
     [PunRPC]
-    void UpdateCharacterColor(Color color)
+    void UpdateCharacterColor()
     {
         // Only update the color if the character is owned by the local player
         if (photonView.IsMine)
         {
-            // Set the color of the character
-            foreach (var player in playerItemsList)
+            Color? color = null;
+            if (_selectedColor != null) color = _selectedColor;
+            else if (_localColor != null)
             {
-                if (player.playerName.text == PlayerPrefs.GetString("Username"))
+                color = _localColor;
+                _localColor = null;
+            }
+            else
+            {
+                int index = Random.Range(0, colors.Count);
+                color = colors[index];
+                colors.RemoveAt(index);
+            }
+            
+            // Set the color of the character
+            if(color != null) {
+                foreach (var player in playerItemsList)
                 {
-                    player.SetPlayerColor(color);
-                    
-                    // Save the selected color locally
-                    PlayerPrefs.SetString("Color", color.ToString());
-                    break;
+                    if (player.playerName.text == PlayerPrefs.GetString("Username"))
+                    {
+                        player.SetPlayerColor((Color) color);
+
+                        // Save the selected color locally
+                        PlayerPrefs.SetString("Color", color.ToString());
+                        _selectedColor = color;
+                        Debug.Log("Değiş knk");
+                        break;
+                    }
                 }
             }
         }

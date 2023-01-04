@@ -7,12 +7,13 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     public float speed = 3f;
     public float smoothTime = 0.3f; // The smoothing factor for the camera's movement
     public Vector2 minPos, maxPos; // The minimum and maximum positions that the camera can have
-    private Tilemap tilemap; // A reference to the Tilemap object
-
-    private Animator animator;
     public SpriteRenderer playerSpriteRenderer;
     public SpriteRenderer playerOutlineSpriteRenderer;
+    public bool isImposter;
+
+    private Animator animator;
     private Camera mainCamera; // A reference to the main camera
+    private Tilemap tilemap; // A reference to the Tilemap object
 
     private void Start()
     {
@@ -23,15 +24,15 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
         tilemap = GameObject.Find("Tilemap_Walls").GetComponent<Tilemap>();
 
         // Get the bounding rectangle of the tilemap in grid coordinates
-        BoundsInt cellBounds = tilemap.cellBounds;
+        var cellBounds = tilemap.cellBounds;
 
         // Convert the bounding rectangle to world coordinates
-        Vector3 minCellPos = tilemap.CellToWorld(cellBounds.min);
-        Vector3 maxCellPos = tilemap.CellToWorld(cellBounds.max);
+        var minCellPos = tilemap.CellToWorld(cellBounds.min);
+        var maxCellPos = tilemap.CellToWorld(cellBounds.max);
 
         // Get the size of the camera's viewport in world units
-        float cameraViewportWidth = mainCamera.orthographicSize * mainCamera.aspect;
-        float cameraViewportHeight = mainCamera.orthographicSize;
+        var cameraViewportWidth = mainCamera.orthographicSize * mainCamera.aspect;
+        var cameraViewportHeight = mainCamera.orthographicSize;
 
         // Calculate the minimum and maximum positions
         minPos = new Vector2(minCellPos.x + cameraViewportWidth / 2, minCellPos.y + cameraViewportHeight / 2);
@@ -59,9 +60,9 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
 
             transform.position += new Vector3(horizontal, vertical).normalized * (speed * Time.deltaTime);
             photonView.RPC("Move", RpcTarget.Others, transform.position);
-            
+
             // Follow the character with the camera
-            Vector3 targetPos = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z);
+            var targetPos = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z);
             mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, targetPos, smoothTime);
         }
         else
@@ -94,5 +95,26 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     private void SetAnimation(string animationName)
     {
         animator.Play(animationName);
+    }
+
+    [PunRPC]
+    private void RPC_NeutralizeImposter(int viewID)
+    {
+        PhotonViewByID(viewID).GetComponent<PlayerMovement>().isImposter = false;
+    }
+
+    [PunRPC]
+    private void RPC_MakeImposter(int viewID)
+    {
+        PhotonViewByID(viewID).GetComponent<PlayerMovement>().isImposter = true;
+    }
+
+    public PhotonView PhotonViewByID(int viewID)
+    {
+        var pvs = FindObjectsOfType<PhotonView>();
+        foreach (var pview in pvs)
+            if (pview.ViewID == viewID)
+                return pview;
+        return null;
     }
 }
