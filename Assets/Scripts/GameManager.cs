@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             Debug.Log(imposter);
             if (imposter != null)
             {
-                Debug.Log("GEL VATANDAŞ");
                 Debug.Log(imposter.GetComponent<PlayerMovement>().playerName);
                 Debug.Log(imposter.GetComponent<ColorChanger>().selectedColor);
                 imposterName.text = imposter.GetComponent<PlayerMovement>().playerName;
@@ -130,6 +129,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
 
         imposterPanel.SetActive(true);
+
         if (imposter)
         {
             imposterObject.photonView.RPC("Freeze", RpcTarget.All, true);

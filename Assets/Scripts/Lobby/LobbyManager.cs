@@ -175,7 +175,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         photonView.RPC("UpdateCharacterColor", RpcTarget.All);
     }
     
-    // Updates the color of the character for all clients
     [PunRPC]
     void UpdateCharacterColor()
     {
@@ -207,7 +206,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
                         // Save the selected color locally
                         PlayerPrefs.SetString("Color", color.ToString());
                         _selectedColor = color;
-                        Debug.Log("Değiş knk");
                         break;
                     }
                 }

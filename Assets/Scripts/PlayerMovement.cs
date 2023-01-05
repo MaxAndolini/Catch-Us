@@ -59,8 +59,7 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
         {
             animator.Play("Walk");
             photonView.RPC("SetAnimation", RpcTarget.Others, "Walk");
-
-            // Eğer y eksenine göre hareket ediliyorsa, sprite'ı y eksenine göre aynala
+            
             if (horizontal > 0 || horizontal < 0)
             {
                 playerSpriteRenderer.flipX = horizontal < 0;
@@ -129,14 +128,14 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     private void RPC_NeutralizeImposter(int viewID)
     {
         PhotonViewByID(viewID).GetComponent<PlayerMovement>().isImposter = false;
-        Debug.Log("Masum");
+        Debug.Log("Crewmate");
     }
 
     [PunRPC]
     private void RPC_MakeImposter(int viewID)
     {
         PhotonViewByID(viewID).GetComponent<PlayerMovement>().isImposter = true;
-        Debug.Log("Katil");
+        Debug.Log("Imposter");
     }
 
     public PhotonView PhotonViewByID(int viewID)
@@ -200,7 +199,6 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     public void Freeze(bool condition)
     {
         freeze = condition;
-        Debug.Log("SAAA");
         Debug.Log(condition);
     }
 }
